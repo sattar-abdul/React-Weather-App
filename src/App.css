@@ -1,0 +1,10 @@
+.Toggler {
+    display: flex;
+    justify-content: end;
+}
+
+body {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
