@@ -58,8 +58,6 @@ const getWeatherEffect = (weather) => {
 };
 
 export default function WeatherApp({ onEffectChange }) {
-  const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
-
   const [forecast, setForecast] = useState([]);
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
@@ -82,12 +80,12 @@ export default function WeatherApp({ onEffectChange }) {
 
     try {
       const currentRes = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?q=${inputCity}&units=metric&appid=${API_KEY}`
+        `/api/weather?city=${encodeURIComponent(inputCity)}`
       );
       setWeather(currentRes.data);
 
       const forecastRes = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${inputCity}&units=metric&appid=${API_KEY}`
+        `/api/forecast?city=${encodeURIComponent(inputCity)}`
       );
 
       const daily = forecastRes.data.list.filter((item) =>
