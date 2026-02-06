@@ -5,7 +5,7 @@ import WeatherApp from "./WeatherApp";
 import { Switch, FormControlLabel } from "@mui/material";
 import "./App.css";
 import darkBackground from "/night_background.jpg";
-import lightBackground from "/day_background.jpg";
+import lightBackground from "/day_background.png";
 
 export default function App() {
   const [mode, setMode] = useState("dark");
