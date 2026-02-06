@@ -7,4 +7,16 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  overflow: hidden;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.app-root {
+  position: relative;
+  overflow: hidden;
 }

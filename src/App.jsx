@@ -6,9 +6,14 @@ import { Switch, FormControlLabel } from "@mui/material";
 import "./App.css";
 import darkBackground from "/night_background.jpg";
 import lightBackground from "/day_background.png";
+import WeatherEffectsCanvas from "./WeatherEffectsCanvas";
 
 export default function App() {
   const [mode, setMode] = useState("dark");
+  const [weatherEffect, setWeatherEffect] = useState({
+    type: "",
+    heavyRain: false,
+  });
 
   const theme = createTheme({
     palette: {
@@ -24,16 +29,20 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div
+        className="app-root"
+        data-theme={mode}
         style={{
           backgroundImage: `url(${
             mode === "dark" ? darkBackground : lightBackground
           })`,
+          backgroundColor: mode === "dark" ? "#0b0f1a" : "#f3f6ff",
           backgroundSize: "cover",
           backgroundPosition: "center",
           minHeight: "100vh",
-          transition: "0.5s",
+          transition: "background-color 0.5s ease, background-image 0.5s ease",
         }}
       >
+        <WeatherEffectsCanvas effect={weatherEffect} />
         <div className="Toggler">
           <FormControlLabel
             control={
@@ -42,7 +51,7 @@ export default function App() {
             label={mode === "dark" ? "Dark Mode" : "Light Mode"}
           />
         </div>
-        <WeatherApp />
+        <WeatherApp onEffectChange={setWeatherEffect} />
       </div>
     </ThemeProvider>
   );

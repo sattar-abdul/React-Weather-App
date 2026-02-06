@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 import WeatherSearch from "./WeatherSearch";
@@ -6,7 +6,58 @@ import WeatherHistory from "./WeatherHistory";
 import WeatherCard from "./WeatherCard";
 import ForecastList from "./ForecastList";
 
-export default function WeatherApp() {
+const getWeatherEffect = (weather) => {
+  if (!weather) {
+    return {
+      type: "",
+      heavyRain: false,
+    };
+  }
+
+  const condition = weather.weather[0].main.toLowerCase();
+  const description = weather.weather[0].description.toLowerCase();
+
+  let type = "";
+  if (
+    condition.includes("rain") ||
+    condition.includes("drizzle") ||
+    condition.includes("thunder")
+  ) {
+    type = "rain";
+  } else if (condition.includes("snow")) {
+    type = "snow";
+  } else if (condition.includes("cloud")) {
+    type = "";
+  } else if (condition.includes("clear")) {
+    type = "clear";
+  } else if (
+    condition.includes("mist") ||
+    condition.includes("fog") ||
+    condition.includes("haze") ||
+    condition.includes("smoke") ||
+    condition.includes("dust") ||
+    condition.includes("sand") ||
+    condition.includes("ash")
+  ) {
+    type = "mist";
+  }
+
+  const rainAmount =
+    weather.rain?.["1h"] ??
+    weather.rain?.["3h"] ??
+    0;
+  const heavyRain =
+    rainAmount >= 3 ||
+    description.includes("heavy") ||
+    description.includes("thunder");
+
+  return {
+    type,
+    heavyRain,
+  };
+};
+
+export default function WeatherApp({ onEffectChange }) {
   const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
   const [forecast, setForecast] = useState([]);
@@ -59,6 +110,14 @@ export default function WeatherApp() {
 
     setLoading(false); // stop loading
   };
+
+  const weatherEffect = getWeatherEffect(weather);
+
+  useEffect(() => {
+    if (onEffectChange) {
+      onEffectChange(weatherEffect);
+    }
+  }, [onEffectChange, weatherEffect]);
 
   return (
     <div className="weather-container">
