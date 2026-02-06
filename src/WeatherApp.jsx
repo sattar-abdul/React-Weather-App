@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import "./Weather.css";
 import WeatherSearch from "./WeatherSearch";
@@ -111,11 +111,19 @@ export default function WeatherApp({ onEffectChange }) {
     setLoading(false); // stop loading
   };
 
-  const weatherEffect = getWeatherEffect(weather);
+  const weatherEffect = useMemo(() => getWeatherEffect(weather), [weather]);
+  const lastEffectRef = useRef({ type: "", heavyRain: false });
 
   useEffect(() => {
     if (onEffectChange) {
-      onEffectChange(weatherEffect);
+      const last = lastEffectRef.current;
+      if (
+        last.type !== weatherEffect.type ||
+        last.heavyRain !== weatherEffect.heavyRain
+      ) {
+        lastEffectRef.current = weatherEffect;
+        onEffectChange(weatherEffect);
+      }
     }
   }, [onEffectChange, weatherEffect]);
 
